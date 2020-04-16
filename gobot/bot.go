@@ -29,3 +29,11 @@ func (bot *Bot) RegisterCommand(cmd Command) {
 	}
 	bot.Commands[cmd.Name] = cmd
 }
+
+// RegisterCommands registers multiple commands at once.
+// This is convenient for, for instance, importing modules created by others.
+func (bot *Bot) RegisterCommands(cmds []Command) {
+	for _, cmd := range cmds {
+		bot.RegisterCommand(cmd)
+	}
+}
