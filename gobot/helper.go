@@ -39,11 +39,13 @@ func commandDescription(ctx Context) {
 	embed.Title = "Command Reference"
 	embed.Description = "`" + ctx.Prefix + command.Name + "`"
 	embed.Fields = make([]*discordgo.MessageEmbedField, 0, 1)
-	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-		Name:   "Description",
-		Value:  command.Description,
-		Inline: false,
-	})
+	if command.Description != "" {
+		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+			Name:   "Description",
+			Value:  command.Description,
+			Inline: false,
+		})
+	}
 	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 		Name:   "Category",
 		Value:  command.Category,

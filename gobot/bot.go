@@ -24,5 +24,8 @@ func (bot *Bot) Init() {
 
 // RegisterCommand registers (and overwrites) a command in the bot.
 func (bot *Bot) RegisterCommand(cmd Command) {
+	if cmd.Category == "" {
+		cmd.Category = "Generic"
+	}
 	bot.Commands[cmd.Name] = cmd
 }
