@@ -6,7 +6,15 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+func (bot *Bot) handleReady(_ *discordgo.Session, ready *discordgo.Ready) {
+	bot.Me = ready.User
+}
+
 func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate) {
+	// are we ready yet?
+	if bot.Me == nil {
+		return
+	}
 	// ignore ourselves
 	if msg.Author.ID == bot.Session.State.User.ID {
 		return
@@ -53,6 +61,8 @@ func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate
 		Author:    msg.Member,
 		ChannelID: msg.ChannelID,
 		GuildID:   msg.GuildID,
+
+		Me: bot.Me,
 	}
 	command.Runner(context)
 }

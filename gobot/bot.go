@@ -10,13 +10,15 @@ type Bot struct {
 	Description string   // The bot's self-description, used in help.
 
 	Commands map[string]Command // All the bot's commands. Do not write to this map directly.
+	Me       *discordgo.User    // Our bot's user, populated after READY.
 }
 
 // Init initializes a new Bot instance and registers event handlers.
 func (bot *Bot) Init() {
 	bot.Commands = make(map[string]Command)
 	bot.RegisterCommand(DefaultHelper())
-	// finally, register our handler
+	// finally, register our handlers
+	bot.Session.AddHandler(bot.handleReady)
 	bot.Session.AddHandler(bot.handleMessage)
 }
 

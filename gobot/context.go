@@ -13,6 +13,8 @@ type Context struct {
 	Author    *discordgo.Member        // Shorthand for Message.Author.
 	ChannelID string                   // Shorthand for Message.ChannelID.
 	GuildID   string                   // Shorthand for Message.GuildID.
+
+	Me *discordgo.User // Shorthand for Bot.Me.
 }
 
 // Reply is shorthand to send a message to the channel the command was invoked

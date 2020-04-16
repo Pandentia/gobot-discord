@@ -9,7 +9,7 @@ import (
 
 func helpMenu(ctx Context) {
 	embed := &discordgo.MessageEmbed{}
-	embed.Title = "Help"
+	embed.Title = "Command Help for " + ctx.Me.Username
 	embed.Description = ctx.Bot.Description
 	embed.Fields = make([]*discordgo.MessageEmbedField, 0, 1)
 	categories, commandMap := aggregateCommands(ctx.Bot.Commands)
