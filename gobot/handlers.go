@@ -51,7 +51,7 @@ func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate
 	}
 
 	// create context and run
-	context := Context{
+	context := &Context{
 		Bot:     bot,
 		Prefix:  prefix,
 		Command: command,
@@ -62,7 +62,8 @@ func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate
 		ChannelID: msg.ChannelID,
 		GuildID:   msg.GuildID,
 
-		Me: bot.Me,
+		Me:    bot.Me,
+		State: bot.State,
 	}
 	command.Runner(context)
 }
