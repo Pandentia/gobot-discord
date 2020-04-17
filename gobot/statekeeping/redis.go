@@ -251,6 +251,9 @@ func (r *RedisState) OnEvent(session *discordgo.Session, event interface{}) {
 	case *discordgo.Connect:
 		r.Redis.Do(radix.Cmd(nil, "INCR", "stats:connects"))
 
+	case *discordgo.TypingStart, *discordgo.Disconnect:
+		// ignore
+
 	default:
 		fmt.Printf("State: Unrecognized event: %T\n", event)
 	}
