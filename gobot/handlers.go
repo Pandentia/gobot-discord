@@ -7,12 +7,12 @@ import (
 )
 
 func (bot *Bot) handleReady(_ *discordgo.Session, ready *discordgo.Ready) {
-	bot.Me = ready.User
+	bot.me = ready.User
 }
 
 func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate) {
 	// are we ready yet?
-	if bot.Me == nil {
+	if bot.me == nil {
 		return
 	}
 	// ignore ourselves
@@ -44,14 +44,10 @@ func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate
 		return
 	}
 	commandArgs := strings.Split(commandContent, " ")
-	commandArgs[0] = strings.ToLower(commandArgs[0])
-	command, exists := bot.Commands[commandArgs[0]]
-	if !exists {
-		return
-	}
+	command := bot.GetCommand(commandArgs[0])
 
-	// create context and run
-	context := Context{
+	// create context
+	ctx := &Context{
 		Bot:     bot,
 		Prefix:  prefix,
 		Command: command,
@@ -61,8 +57,15 @@ func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate
 		Author:    msg.Member,
 		ChannelID: msg.ChannelID,
 		GuildID:   msg.GuildID,
-
-		Me: bot.Me,
 	}
-	command.Runner(context)
+	// run checks
+	if command.Checks != nil {
+		for _, check := range command.Checks {
+			if !check(ctx) {
+				return
+			}
+		}
+	}
+	// run the command, if the checks didn't fail
+	command.Runner(ctx)
 }

@@ -7,12 +7,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func helpMenu(ctx Context) {
+func helpMenu(ctx *Context) {
 	embed := &discordgo.MessageEmbed{}
-	embed.Title = "Command Help for " + ctx.Me.Username
+	embed.Title = "Command Help for " + ctx.Me().Username
 	embed.Description = ctx.Bot.Description
 	embed.Fields = make([]*discordgo.MessageEmbedField, 0, 1)
-	categories, commandMap := aggregateCommands(ctx.Bot.Commands)
+	categories, commandMap := aggregateCommands(ctx.Bot.commands)
 	for _, category := range categories {
 		commands := make([]string, 0, 1)
 		for _, command := range commandMap[category] {
@@ -28,8 +28,8 @@ func helpMenu(ctx Context) {
 	ctx.ReplyWithEmbed(embed)
 }
 
-func commandDescription(ctx Context) {
-	command, ok := ctx.Bot.Commands[ctx.Args[0]]
+func commandDescription(ctx *Context) {
+	command, ok := ctx.Bot.commands[ctx.Args[0]]
 	if !ok {
 		ctx.Reply("Command not found.")
 		return
@@ -55,8 +55,8 @@ func commandDescription(ctx Context) {
 }
 
 // DefaultHelper returns the default help command.
-func DefaultHelper() Command {
-	runner := func(ctx Context) {
+func DefaultHelper() *Command {
+	runner := func(ctx *Context) {
 		if len(ctx.Args) == 0 {
 			helpMenu(ctx)
 		} else {
@@ -64,7 +64,7 @@ func DefaultHelper() Command {
 		}
 	}
 
-	return Command{
+	return &Command{
 		Name:        "help",
 		Description: "Provides a list of all bot commands.",
 		Category:    "Generic",
@@ -72,13 +72,13 @@ func DefaultHelper() Command {
 	}
 }
 
-func aggregateCommands(commands map[string]Command) (categories []string, commandMap map[string][]Command) {
+func aggregateCommands(commands map[string]*Command) (categories []string, commandMap map[string][]*Command) {
 	// aggregate commands first, easier
-	commandMap = make(map[string][]Command)
+	commandMap = make(map[string][]*Command)
 	for _, cmd := range commands {
 		cat := cmd.Category
 		if _, ok := commandMap[cat]; !ok {
-			commandMap[cat] = make([]Command, 0, 1)
+			commandMap[cat] = make([]*Command, 0, 1)
 		}
 		commandMap[cat] = append(commandMap[cat], cmd)
 	}

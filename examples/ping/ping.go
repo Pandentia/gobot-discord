@@ -28,11 +28,11 @@ func main() {
 		Description: "A testing discord bot",
 	}
 	bot.Init()
-	bot.RegisterCommand(gobot.Command{
+	bot.RegisterCommand(&gobot.Command{
 		Name:        "ping",
 		Description: "A ping command",
 		Category:    "Generic",
-		Runner: func(ctx gobot.Context) {
+		Runner: func(ctx *gobot.Context) {
 			ctx.Reply("Pong!")
 		},
 	})
