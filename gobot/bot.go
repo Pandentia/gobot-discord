@@ -8,10 +8,12 @@ import (
 
 // Bot represents a Discord bot with commands.
 type Bot struct {
-	Session *discordgo.Session // The underlying, preconfigured discordgo session.
-
-	Prefixes    []string // The prefixes the bot listens to.
-	Description string   // The bot's self-description, used in help.
+	// The underlying, preconfigured discordgo session.
+	Session *discordgo.Session
+	// The bot's prefix handler.
+	Prefix func(msg *discordgo.Message) string
+	// The bot's self-description, used in help.
+	Description string
 
 	commands map[string]*Command // All the bot's commands. Do not write to this map directly.
 	me       *discordgo.User     // Our bot's user, populated after READY.

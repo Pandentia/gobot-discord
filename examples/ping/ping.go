@@ -24,7 +24,7 @@ func main() {
 	}
 	bot := gobot.Bot{
 		Session:     session,
-		Prefixes:    []string{"?"},
+		Prefix:      gobot.SinglePrefixHandler("?"),
 		Description: "A testing discord bot",
 	}
 	bot.Init()

@@ -25,15 +25,8 @@ func (bot *Bot) handleMessage(_ *discordgo.Session, msg *discordgo.MessageCreate
 	}
 
 	// detect our prefix
-	var prefix string
-	var validPrefix bool
-	for _, prefix = range bot.Prefixes {
-		if strings.HasPrefix(msg.Content, prefix) {
-			validPrefix = true
-			break
-		}
-	}
-	if !validPrefix {
+	prefix := bot.Prefix(msg.Message)
+	if prefix == "" {
 		return
 	}
 
